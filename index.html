@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Danzz Vault - Public</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- Tirai Animasi Intro -->
+<div class="curtain top"></div>
+<div class="curtain bot"></div>
+
+<!-- Sesi Intro Animasi Masuk -->
+<section id="intro">
+  <div class="ring"></div>
+  <div class="stickers"><span class="s1">PREMIUM ✦</span><span class="s2">SECURE 🔒</span></div>
+
+  <div class="pill"><span class="dot-intro"></span>Server aktif · Brankas Digital</div>
+
+  <h1 class="logo-intro" aria-label="Danzz Vault">
+    <span class="row"><span>Danzz</span></span>
+    <span class="row2wrap"><span class="row"><span>Vault<span class="dotend">.</span></span></span></span>
+  </h1>
+
+  <div class="bar"><i id="fill"></i><b id="pct">0%</b></div>
+  <div class="tag">DANZZ VAULT • ACCESS • DIGITAL • 2026</div>
+</section>
+
+    <div class="container">
+        <!-- Navbar -->
+        <header class="navbar">
+            <div class="logo">
+                <span class="arrow-down">↓</span> <strong>DANZZ VAULT</strong>
+            </div>
+            <div class="nav-buttons">
+                <label class="accent-control" for="accentColorPicker">Warna
+                    <select id="accentColorPicker" aria-label="Pilih warna aksen">
+                        <option value="lime">Neon Green</option>
+                        <option value="pink">Hot Pink</option>
+                        <option value="cyan">Cyan Blue</option>
+                        <option value="purple">Electric Purple</option>
+                    </select>
+                </label>
+                <button class="btn-top yellow" id="themeToggleBtn" title="Ganti Tema">🌙 MODE</button>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="time-badge">
+                <span class="dot"></span> <span id="current-time">14.25.29</span>
+            </div>
+            <div class="status-card">
+                <span class="status-dot"></span> Sistem Aktif • Publik Mode
+            </div>
+            <h1>Simpan Link <span class="highlight">Game & Tautan</span> Favoritmu.</h1>
+            <p class="hero-desc">Jelajahi dan cari tautan game, aplikasi, atau tools dengan cepat dan mudah.</p>
+        </section>
+
+        <!-- Bagian Filter & Pencarian -->
+        <section class="filter-section">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="🔍 Cari judul, URL, atau catatan...">
+            </div>
+            <div class="category-filters" id="categoryFilters">
+                <button class="filter-btn active" data-cat="Semua">Semua</button>
+                <button class="filter-btn" data-cat="Game">Game</button>
+                <button class="filter-btn" data-cat="Aplikasi">Aplikasi</button>
+                <button class="filter-btn" data-cat="Tools">Tools</button>
+                <button class="filter-btn" data-cat="Lainnya">Lainnya</button>
+            </div>
+            <div class="extra-filters">
+                <label for="statusFilter">Status tautan</label>
+                <select id="statusFilter">
+                    <option value="all">Semua status</option>
+                    <option value="working">Working</option>
+                    <option value="maintenance">Maintenance</option>
+                    <option value="updated">Updated</option>
+                </select>
+            </div>
+            <div class="tag-filter-wrap">
+                <span class="filter-caption">Filter tag</span>
+                <div id="tagFilters" class="tag-filters">
+                    <button class="tag-filter active" data-tag="all">Semua tag</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Daftar Link -->
+        <section class="list-section">
+            <h2>Daftar Tautan</h2>
+            <div id="linksContainer" class="links-grid">
+                <!-- Data dirender otomatis lewat script.js -->
+            </div>
+        </section>
+
+        <!-- Footer dengan Link ke Admin -->
+        <footer class="footer">
+            <p>DANZZ VAULT • PUBLIC ACCESS • 2026</p>
+            <div style="margin-top: 10px;">
+                <a href="admin.html" class="btn-top white" style="text-decoration: none; font-size: 10px; padding: 4px 10px; display: inline-block;">🔐 Panel Admin</a>
+            </div>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+    // Logika Animasi Intro Masuk Website
+    const fill = document.getElementById('fill'), pct = document.getElementById('pct'), intro = document.getElementById('intro');
+    let timer, runId = 0;
+    function run(){
+      document.body.classList.remove('exit', 'open');
+      intro.classList.remove('gone');
+      intro.style.display = 'none'; void intro.offsetWidth; intro.style.display = '';
+      let p = 0; fill.style.width = '0%'; pct.textContent = '0%';
+      clearInterval(timer);
+      const id = ++runId, START = 1200, DUR = 7600;
+      setTimeout(()=>{
+        const t0 = performance.now();
+        (function tick(now){
+          if(id !== runId) return;
+          p = Math.min(100, ((now - t0) / DUR) * 100);
+          fill.style.width = p + '%'; pct.textContent = Math.floor(p) + '%';
+          if(p < 100) requestAnimationFrame(tick); else setTimeout(finish, 200);
+        })(t0);
+      }, START);
+    }
+    function finish(){
+      document.body.classList.add('exit');
+      setTimeout(()=>{ intro.classList.add('gone'); document.body.classList.remove('exit'); document.body.classList.add('open'); }, 950);
+    }
+    run();
+    </script>
+</body>
+</html>

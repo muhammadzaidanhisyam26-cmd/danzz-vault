@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danzz Vault - Admin Panel</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="open">
+    <div class="container">
+        <!-- Navbar dengan Tombol Kembali Cepat di Atas -->
+        <header class="navbar">
+            <div class="logo">
+                <span class="arrow-down">↓</span> <strong>ADMIN PANEL</strong>
+            </div>
+            <div class="nav-buttons">
+                <button type="button" class="btn-top white" onclick="window.location.href = window.location.href.replace(/admin\.html.*$/, 'index.html')" style="cursor: pointer; display: inline-flex; align-items: center;">← Kembali</button>
+                <label class="accent-control" for="accentColorPicker">Warna
+                    <select id="accentColorPicker" aria-label="Pilih warna aksen">
+                        <option value="lime">Neon Green</option>
+                        <option value="pink">Hot Pink</option>
+                        <option value="cyan">Cyan Blue</option>
+                        <option value="purple">Electric Purple</option>
+                    </select>
+                </label>
+                <button class="btn-top yellow" id="themeToggleBtn">🌙 MODE</button>
+                <button class="btn-top white" id="clearStorageBtn">RESET</button>
+            </div>
+        </header>
+
+        <!-- Hero Status Admin -->
+        <section class="hero">
+            <div class="status-card" style="border-color: #22c55e;">
+                <span class="status-dot"></span> Admin Terautentikasi
+            </div>
+            <h1>Kelola & Tambah <span class="highlight">Tautan</span> Baru.</h1>
+        </section>
+
+        <!-- Form Tambah Link -->
+        <section class="form-section card">
+            <h2>Tambah Link Baru</h2>
+            <form id="linkForm">
+                <div class="input-group">
+                    <label for="linkTitle">Judul / Nama Game</label>
+                    <input type="text" id="linkTitle" placeholder="Contoh: Minecraft Official" required>
+                </div>
+                <div class="input-group">
+                    <label for="linkCategory">Kategori</label>
+                    <select id="linkCategory">
+                        <!-- Opsi kategori dimuat otomatis -->
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="linkUrl">URL Tautan (https://...)</label>
+                    <input type="url" id="linkUrl" placeholder="https://example.com" required>
+                </div>
+                <!-- Input Foto via Link -->
+                <div class="input-group">
+                    <label for="imageUrl">URL Foto / Gambar (Opsional)</label>
+                    <input type="url" id="imageUrl" placeholder="https://example.com/gambar.jpg">
+                </div>
+                <!-- Upload Foto Langsung -->
+                <div class="input-group">
+                    <label for="imageFile">Atau Upload Foto dari Perangkat (JPG, JPEG, PNG, WEBP)</label>
+                    <input type="file" id="imageFile" accept=".jpg, .jpeg, .png, .webp">
+                </div>
+                <!-- Preview Gambar -->
+                <div class="input-group">
+                    <label>Preview Gambar</label>
+                    <div class="image-preview-box">
+                        <img id="previewImg" src="" alt="Preview" class="preview-img-hidden" />
+                        <span id="previewPlaceholder">Belum ada gambar dipilih</span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="linkTags">Tag (pisahkan dengan koma)</label>
+                    <input type="text" id="linkTags" placeholder="offline, multiplayer, pc, android">
+                    <small class="field-hint">Contoh: #offline, #pc, #multiplayer</small>
+                </div>
+                <div class="input-group">
+                    <label for="linkStatus">Status tautan</label>
+                    <select id="linkStatus">
+                        <option value="working">Working</option>
+                        <option value="maintenance">Maintenance</option>
+                        <option value="updated">Updated</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="linkNotes">Catatan / Keterangan (Opsional)</label>
+                    <input type="text" id="linkNotes" placeholder="Contoh: Versi v1.20 / Password: 123">
+                </div>
+                <button type="submit" class="btn-primary">Simpan Tautan →</button>
+            </form>
+        </section>
+
+        <!-- Kelola Kategori -->
+        <section class="form-section card">
+            <h2>Kelola Kategori</h2>
+            <form id="categoryForm" style="display: flex; gap: 8px; margin-bottom: 12px;">
+                <input type="text" id="newCategoryInput" placeholder="Nama kategori baru..." style="flex:1; padding: 10px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 14px; background: var(--card-bg); color: var(--text-color);" required>
+                <button type="submit" class="btn-top yellow">Tambah</button>
+            </form>
+            <div id="categoryList" style="display: flex; flex-wrap: wrap; gap: 6px;"></div>
+        </section>
+
+        <!-- Statistik & Backup -->
+        <section class="stats-grid">
+            <div class="card stat-card">
+                <span class="stat-label">TOTAL TAUTAN</span>
+                <span class="stat-value" id="totalLinks">0</span>
+            </div>
+            <div class="backup-actions">
+                <button id="exportBtn" class="btn-top yellow">📥 Export</button>
+                <label for="importFile" class="btn-top white import-label">📤 Import</label>
+                <input type="file" id="importFile" accept=".json" style="display: none;">
+            </div>
+        </section>
+
+        <!-- Daftar Link untuk Dikelola -->
+        <section class="list-section">
+            <h2>Kelola Daftar Tautan</h2>
+            <div id="linksContainer" class="links-grid"></div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>ADMINISTRATION AREA • 2026</p>
+            <div style="margin-top: 10px;">
+                <button type="button" class="btn-top white" onclick="window.location.href = window.location.href.replace(/admin\.html.*$/, 'index.html')" style="cursor: pointer; font-size: 10px; padding: 4px 10px; display: inline-block;">← Kembali ke Web Utama</button>
+            </div>
+        </footer>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+</html>
