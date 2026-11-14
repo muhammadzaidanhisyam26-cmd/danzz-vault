@@ -1,3 +1,17 @@
+// --- KONFIGURASI FIREBASE ---
+const firebaseConfig = {
+    apiKey: "AIzaSyBjHgrxGE5fHJyG64GNvTBQ7wIQYYYG88w",
+    authDomain: "danzz-vault.firebaseapp.com",
+    projectId: "danzz-vault",
+    storageBucket: "danzz-vault.firebasestorage.app",
+    messagingSenderId: "416796569760",
+    appId: "1:416796569760:web:a39e1d89f62a1a3d6b19c5"
+};
+
+// Inisialisasi Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
 const linksContainer = document.getElementById('linksContainer');
 const currentTimeEl = document.getElementById('current-time');
 const searchInput = document.getElementById('searchInput');
@@ -10,6 +24,7 @@ const accentColorPicker = document.getElementById('accentColorPicker');
 let currentCategory = 'Semua';
 let currentTag = 'all';
 let searchQuery = '';
+let links = []; // Data akan ditarik langsung dari Firestore
 
 const STATUS_LABELS = {
     working: 'Working',
@@ -47,7 +62,7 @@ function updateTime() {
 setInterval(updateTime, 1000);
 updateTime();
 
-// Warna aksen pilihan pengguna, terpisah dari mode gelap/terang.
+// Warna aksen pilihan pengguna
 function applyAccentColor(name) {
     const selected = ACCENT_PRESETS[name] ? name : 'lime';
     const preset = ACCENT_PRESETS[selected];
@@ -61,7 +76,7 @@ if (accentColorPicker) {
     accentColorPicker.addEventListener('change', event => applyAccentColor(event.target.value));
 }
 
-// Dark Mode Handler lama
+// Dark Mode Handler
 let isDarkMode = localStorage.getItem('dark_mode') === 'true';
 if (isDarkMode) {
     document.body.classList.add('dark-mode');
@@ -76,9 +91,6 @@ if (themeToggleBtn) {
     });
 }
 
-// Data lama tetap dibaca dari key yang sama.
-let links = JSON.parse(localStorage.getItem('saved_links')) || [];
-
 function getAllTags() {
     return [...new Set(links.flatMap(link => normalizeTags(link.tags)))].sort();
 }
@@ -86,6 +98,7 @@ function getAllTags() {
 // Filter kategori dinamis
 function renderCategoryFilters() {
     if (!categoryFilters) return;
+    // Kategori tetap bisa ambil dari localStorage atau default
     const categories = JSON.parse(localStorage.getItem('saved_categories')) || ['Game', 'Aplikasi', 'Tools', 'Lainnya'];
     categoryFilters.innerHTML = '';
     const allButton = document.createElement('button');
@@ -182,6 +195,14 @@ function renderPublicLinks() {
     });
 }
 
+// Ambil Data Secara Real-Time dari Firestore
+db.collection("links").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
+    links = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    renderCategoryFilters();
+    renderTagFilters();
+    renderPublicLinks();
+});
+
 if (searchInput) {
     searchInput.addEventListener('input', event => {
         searchQuery = event.target.value;
@@ -209,8 +230,3 @@ if (tagFilters) {
     });
 }
 if (statusFilter) statusFilter.addEventListener('change', renderPublicLinks);
-
-// Inisialisasi
-renderCategoryFilters();
-renderTagFilters();
-renderPublicLinks();
